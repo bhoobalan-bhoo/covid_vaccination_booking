@@ -17,7 +17,11 @@ class AvailableTimingsResource extends Resource
 {
     protected static ?string $model = AvailableTimings::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $label = 'Available Timings over Centre';
+
+    protected static ?string $navigationIcon = 'heroicon-o-clock';
+
+    protected static ?string $navigationGroup = 'Centralize Control';
 
     public static function form(Form $form): Form
     {
@@ -44,14 +48,14 @@ class AvailableTimingsResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -60,5 +64,5 @@ class AvailableTimingsResource extends Resource
             'view' => Pages\ViewAvailableTimings::route('/{record}'),
             'edit' => Pages\EditAvailableTimings::route('/{record}/edit'),
         ];
-    }    
+    }
 }

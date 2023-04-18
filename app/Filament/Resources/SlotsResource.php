@@ -17,8 +17,11 @@ class SlotsResource extends Resource
 {
     protected static ?string $model = Slots::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $label = 'Slots ';
 
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+
+    protected static ?string $navigationGroup = 'Centralize Control';
     public static function form(Form $form): Form
     {
         return $form
@@ -44,14 +47,14 @@ class SlotsResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -60,5 +63,5 @@ class SlotsResource extends Resource
             'view' => Pages\ViewSlots::route('/{record}'),
             'edit' => Pages\EditSlots::route('/{record}/edit'),
         ];
-    }    
+    }
 }

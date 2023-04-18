@@ -17,8 +17,11 @@ class VaccinationCentreResource extends Resource
 {
     protected static ?string $model = VaccinationCentre::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $label = 'Vaccination Centre\'s';
 
+    protected static ?string $navigationIcon = 'heroicon-o-home';
+
+    protected static ?string $navigationGroup = 'Centralize Control';
     public static function form(Form $form): Form
     {
         return $form
@@ -44,14 +47,14 @@ class VaccinationCentreResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -60,5 +63,5 @@ class VaccinationCentreResource extends Resource
             'view' => Pages\ViewVaccinationCentre::route('/{record}'),
             'edit' => Pages\EditVaccinationCentre::route('/{record}/edit'),
         ];
-    }    
+    }
 }

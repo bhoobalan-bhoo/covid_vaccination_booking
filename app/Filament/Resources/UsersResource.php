@@ -17,8 +17,9 @@ class UsersResource extends Resource
 {
     protected static ?string $model = Users::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
 
+    protected static ?string $navigationGroup = 'Manage User';
     public static function form(Form $form): Form
     {
         return $form
@@ -44,14 +45,14 @@ class UsersResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -60,5 +61,5 @@ class UsersResource extends Resource
             'view' => Pages\ViewUsers::route('/{record}'),
             'edit' => Pages\EditUsers::route('/{record}/edit'),
         ];
-    }    
+    }
 }

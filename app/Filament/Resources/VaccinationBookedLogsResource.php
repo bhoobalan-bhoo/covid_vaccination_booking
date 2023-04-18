@@ -16,8 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class VaccinationBookedLogsResource extends Resource
 {
     protected static ?string $model = VaccinationBookedLogs::class;
+    protected static ?string $label = 'Book Vaccination';
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
+
+    protected static ?string $navigationGroup = 'User Panel';
 
     public static function form(Form $form): Form
     {
@@ -44,14 +47,14 @@ class VaccinationBookedLogsResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
@@ -60,5 +63,5 @@ class VaccinationBookedLogsResource extends Resource
             'view' => Pages\ViewVaccinationBookedLogs::route('/{record}'),
             'edit' => Pages\EditVaccinationBookedLogs::route('/{record}/edit'),
         ];
-    }    
+    }
 }
