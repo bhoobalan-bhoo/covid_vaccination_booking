@@ -15,8 +15,8 @@ return new class extends Migration
         CREATE TABLE available_timings (
                 id                              BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
                 vaccination_centre_id           BIGINT references vaccination_centres(id),
-                from_time                       TIMESTAMP,
-                to_time                         TIMESTAMP,
+                from_time                       TIME,
+                to_time                         TIME,
                 status                          BOOLEAN default true,
                 created_at                      TIMESTAMP DEFAULT NOW(),
                 updated_at                      TIMESTAMP,
