@@ -2,18 +2,22 @@
 
 namespace App\Policies;
 
-use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
-
+use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Permission;
 class PermissionPolicy
 {
+    use HandlesAuthorization;
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        if ($user->can('viewAny permissions')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -21,7 +25,10 @@ class PermissionPolicy
      */
     public function view(User $user, Permission $permission): bool
     {
-        return true;
+        if ($user->can('view permissions')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -29,7 +36,10 @@ class PermissionPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        if ($user->can('create permissions')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -37,7 +47,10 @@ class PermissionPolicy
      */
     public function update(User $user, Permission $permission): bool
     {
-        return true;
+        if ($user->can('update permissions')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -45,7 +58,10 @@ class PermissionPolicy
      */
     public function delete(User $user, Permission $permission): bool
     {
-        return true;
+        if ($user->can('delete permissions')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**

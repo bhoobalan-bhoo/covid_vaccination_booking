@@ -13,7 +13,10 @@ class AvailableTimingsPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        if ($user->can('viewAny available_timings')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -21,7 +24,10 @@ class AvailableTimingsPolicy
      */
     public function view(User $user, AvailableTimings $availableTimings): bool
     {
-        return true;
+        if ($user->can('view available_timings')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -29,7 +35,10 @@ class AvailableTimingsPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        if ($user->can('create available_timings')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -37,7 +46,10 @@ class AvailableTimingsPolicy
      */
     public function update(User $user, AvailableTimings $availableTimings): bool
     {
-        return true;
+        if ($user->can('edit available_timings')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -45,7 +57,10 @@ class AvailableTimingsPolicy
      */
     public function delete(User $user, AvailableTimings $availableTimings): bool
     {
-        return true;
+        if ($user->can('delete available_timings')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**

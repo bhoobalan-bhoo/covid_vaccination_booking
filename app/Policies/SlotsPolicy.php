@@ -13,7 +13,10 @@ class SlotsPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        if ($user->can('viewAny slots')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -21,7 +24,10 @@ class SlotsPolicy
      */
     public function view(User $user, Slots $slots): bool
     {
-        return true;
+        if ($user->can('view slots')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -29,7 +35,10 @@ class SlotsPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        if ($user->can('create slots')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -37,7 +46,10 @@ class SlotsPolicy
      */
     public function update(User $user, Slots $slots): bool
     {
-        return true;
+        if ($user->can('edit slots')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -45,7 +57,10 @@ class SlotsPolicy
      */
     public function delete(User $user, Slots $slots): bool
     {
-        return true;
+        if ($user->can('delete slots')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**

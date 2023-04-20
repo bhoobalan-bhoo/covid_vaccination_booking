@@ -2,18 +2,24 @@
 
 namespace App\Policies;
 
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Role;
 
 class RolePolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        if ($user->can('viewAny roles')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -21,7 +27,10 @@ class RolePolicy
      */
     public function view(User $user, Role $role): bool
     {
-        return true;
+        if ($user->can('view roles')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -29,7 +38,10 @@ class RolePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        if ($user->can('create roles')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -37,7 +49,10 @@ class RolePolicy
      */
     public function update(User $user, Role $role): bool
     {
-        return true;
+        if ($user->can('edit roles')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -45,7 +60,10 @@ class RolePolicy
      */
     public function delete(User $user, Role $role): bool
     {
-        return true;
+        if ($user->can('delete roles')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -61,6 +79,9 @@ class RolePolicy
      */
     public function forceDelete(User $user, Role $role): bool
     {
-        return true;
+                if ($user->can('viewAny permissions')or auth()->user()->hasRole('Super Admin')  ) {
+            return true;
+        }
+        return false;
     }
 }
