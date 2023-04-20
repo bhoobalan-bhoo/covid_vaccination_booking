@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AvailableTimingsResource\Pages;
 use App\Filament\Resources\AvailableTimingsResource\RelationManagers;
 use App\Models\AvailableTimings;
+use App\Models\VaccinationCentre;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,11 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TimePicker;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\BooleanColumn;
+
 
 class AvailableTimingsResource extends Resource
 {
@@ -27,7 +33,29 @@ class AvailableTimingsResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Select::make('vaccination_centre_id')
+                    ->label('vaccination Centre')
+                    ->relationship('vaccination_centre', 'name', fn (Builder $query) => $query->where('status', '=', 1))
+                    ->required()
+                    ->inlineLabel()
+                    ->columnSpan(2)
+                    ->searchable(),
+
+                TimePicker::make('from_time')
+                    ->label('From Time')
+                    ->placeholder('From Time')
+                    ->required()
+                    ->columnSpan(2)
+                    ->inlineLabel(),
+
+
+                TimePicker::make('to_time')
+                    ->label('To Time')
+                    ->placeholder('To Time')
+                    ->required()
+                    ->columnSpan(2)
+                    ->inlineLabel(),
+
             ]);
     }
 
@@ -35,7 +63,29 @@ class AvailableTimingsResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('vaccination_centre.name')
+                    ->label('Vaccination Centre')
+                    ->searchable()
+                    ->sortable(),
+
+                TextColumn::make('from_time')
+                    ->label('From Time')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('to_time')
+                    ->label('To Time')
+                    ->searchable()
+                    ->sortable(),
+
+
+                BooleanColumn::make('status')
+                    ->label('Status'),
+
+                TextColumn::make('created_by')
+                    ->label('Created By')
+                    ->sortable()
+                    ->searchable()
+                    ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 //

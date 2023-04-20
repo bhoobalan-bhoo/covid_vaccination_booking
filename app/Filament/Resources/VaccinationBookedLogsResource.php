@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\VaccinationBookedLogsResource\Pages;
 use App\Filament\Resources\VaccinationBookedLogsResource\RelationManagers;
+use App\Models\AvailableTimings;
 use App\Models\VaccinationBookedLogs;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -12,6 +13,7 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Select;
 
 class VaccinationBookedLogsResource extends Resource
 {
@@ -26,7 +28,34 @@ class VaccinationBookedLogsResource extends Resource
     {
         return $form
             ->schema([
-                //
+            Select::make('user_id')
+                ->label('User Name')
+                ->relationship('users', 'name', fn (Builder $query) => $query)
+                ->required()
+                ->inlineLabel()
+                ->columnSpan(2),
+
+            Select::make('vaccination_centre_id')
+                ->label('Vaccination Centre')
+                ->relationship('vaccination_centre', 'name', fn (Builder $query) => $query->where('status', '=', 1))
+                ->required()
+                ->inlineLabel()
+                ->columnSpan(2),
+
+            Select::make('available_timings_id')
+                ->label('Available Timing')
+                ->options(VaccinationBookedLogs::available_timings())
+                ->required()
+                ->inlineLabel()
+                ->columnSpan(2),
+
+            Select::make('slot_id')
+                ->label('Slot Available')
+                ->relationship('slots', 'count', fn (Builder $query) => $query->where('status', '=', 1))
+                ->required()
+                ->inlineLabel()
+                ->columnSpan(2),
+
             ]);
     }
 
@@ -34,7 +63,7 @@ class VaccinationBookedLogsResource extends Resource
     {
         return $table
             ->columns([
-                //
+
             ])
             ->filters([
                 //

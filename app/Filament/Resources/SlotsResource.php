@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\SlotsResource\Pages;
 use App\Filament\Resources\SlotsResource\RelationManagers;
 use App\Models\Slots;
+use Faker\Provider\ar_EG\Text;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -12,6 +13,11 @@ use Filament\Resources\Table;
 use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\TextInput;
+use Filament\Tables\Columns\TextColumn;
+
 
 class SlotsResource extends Resource
 {
@@ -26,7 +32,30 @@ class SlotsResource extends Resource
     {
         return $form
             ->schema([
-                //
+
+                Select::make('vaccination_centre_id')
+                ->label('Vaccination Centre')
+                ->relationship('vaccination_centre', 'name', fn (Builder $query) => $query->where('status', '=', 1))
+                ->required()
+                ->inlineLabel()
+                ->columnSpan(2),
+
+
+            DatePicker::make('date_alloted')
+                ->label('Date')
+                ->required()
+                ->inlineLabel()
+                ->columnSpan(2)
+                ->default(now())
+                ->minDate(now())->withoutTime(true)
+                ->inlineLabel(),
+
+            TextInput::make('count')
+                ->label('No. of Slots')
+                ->required()
+                ->columnSpan(2)
+                ->inlineLabel(),
+
             ]);
     }
 
@@ -34,7 +63,21 @@ class SlotsResource extends Resource
     {
         return $table
             ->columns([
-                //
+                TextColumn::make('vaccination_centre.name')
+                ->label('Vaccination Centre')
+                ->toggleable()
+                ->searchable(),
+
+                TextColumn::make('date_alloted')
+                ->label('Date Alloted')
+                ->searchable()
+                ->toggleable(),
+
+                TextColumn::make('count')
+                ->label('Slots Available')
+                ->searchable()
+                ->toggleable(),
+
             ])
             ->filters([
                 //
