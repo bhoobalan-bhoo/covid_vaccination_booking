@@ -47,7 +47,7 @@ class SlotsResource extends Resource
                 ->inlineLabel()
                 ->columnSpan(2)
                 ->default(now())
-                ->minDate(now())->withoutTime(true)
+                ->minDate(now(-1))->withoutTime(true)
                 ->inlineLabel(),
 
             TextInput::make('count')

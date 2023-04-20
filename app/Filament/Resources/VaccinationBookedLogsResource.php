@@ -31,8 +31,10 @@ class VaccinationBookedLogsResource extends Resource
             ->schema([
             Select::make('user_id')
                 ->label('User Name')
+                ->default(auth()->user()->id)
                 ->relationship('user', 'name', fn (Builder $query) => $query)
                 ->required()
+                ->disabled()
                 ->inlineLabel()
                 ->columnSpan(2),
 
@@ -57,6 +59,13 @@ class VaccinationBookedLogsResource extends Resource
                 ->inlineLabel()
                 ->columnSpan(2),
 
+            Select::make('slot.date_alloted')
+                ->label('Date Alloted')
+                ->searchable()
+                ->disabled()
+                ->inlineLabel()
+                ->columnSpan(2),
+
             ]);
     }
 
@@ -76,7 +85,7 @@ class VaccinationBookedLogsResource extends Resource
 
                 TextColumn::make('slot.date_alloted')
                 ->label('Date Alloted')
-                ->searchable()  
+                ->searchable()
                 ->toggleable(),
 
             ])
