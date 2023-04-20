@@ -54,12 +54,12 @@ class VaccinationBookedLogs extends Model
         return $available_timing_options;
 
     }
-    public function slots(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function slot(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Slots::class);
     }
 
-    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

@@ -14,6 +14,7 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Select;
+use Filament\Tables\Columns\TextColumn;
 
 class VaccinationBookedLogsResource extends Resource
 {
@@ -30,7 +31,7 @@ class VaccinationBookedLogsResource extends Resource
             ->schema([
             Select::make('user_id')
                 ->label('User Name')
-                ->relationship('users', 'name', fn (Builder $query) => $query)
+                ->relationship('user', 'name', fn (Builder $query) => $query)
                 ->required()
                 ->inlineLabel()
                 ->columnSpan(2),
@@ -51,7 +52,7 @@ class VaccinationBookedLogsResource extends Resource
 
             Select::make('slot_id')
                 ->label('Slot Available')
-                ->relationship('slots', 'count', fn (Builder $query) => $query->where('status', '=', 1))
+                ->relationship('slot', 'count', fn (Builder $query) => $query->where('status', '=', 1))
                 ->required()
                 ->inlineLabel()
                 ->columnSpan(2),
@@ -63,6 +64,20 @@ class VaccinationBookedLogsResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('user.name')
+                ->label('Vaccination Centre')
+                ->toggleable()
+                ->searchable(),
+
+                TextColumn::make('vaccination_centre.name')
+                ->label('Vaccination Centre')
+                ->toggleable()
+                ->searchable(),
+
+                TextColumn::make('slot.date_alloted')
+                ->label('Date Alloted')
+                ->searchable()  
+                ->toggleable(),
 
             ])
             ->filters([
