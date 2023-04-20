@@ -36,13 +36,32 @@ class VaccinationBookedLogs extends Model
         'status',
     ];
 
-    public function vaccination_centres(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function vaccination_centre(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(VaccinationCentre::class);
     }
-    public function available_timings(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public static function available_timings():  array
     {
-        return $this->belongsTo(AvailableTimings::class);
+        $available_timing = AvailableTimings::where('status', '=', 1)->get();
+        $available_timing_options = [];
+        foreach ($available_timing as $a_time) {
+            $data =$a_time->from_time.' | '.$a_time->to_time;
+            $available_timing_options[$a_time->id] = strtoupper($data);
+
+        }
+        asort($available_timing_options);
+
+        return $available_timing_options;
+
+    }
+    public function slots(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Slots::class);
+    }
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
 

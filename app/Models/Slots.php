@@ -35,7 +35,7 @@ class Slots extends Model
         'status',
     ];
 
-    public function vaccination_centres(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function vaccination_centre(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(VaccinationCentre::class);
     }
