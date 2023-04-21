@@ -28,7 +28,7 @@ CREATE EXTENSION IF NOT EXISTS citext;
 
 ```sh
 git clone https://github.com/bhoobalan-bhoo/covid_vaccination_booking
-cd bip-laravel
+cd covid_vaccination_booking
 cp .env.dev .env
 # Config .env file for DB Connection and SUPER_ADMIN_EMAIL
 
