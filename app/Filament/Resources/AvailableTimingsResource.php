@@ -33,13 +33,12 @@ class AvailableTimingsResource extends Resource
     {
         return $form
             ->schema([
-                Select::make('vaccination_centre_id')
+               Select::make('vaccination_centre_id')
                     ->label('vaccination Centre')
                     ->relationship('vaccination_centre', 'name', fn (Builder $query) => $query->where('status', '=', 1))
                     ->required()
                     ->inlineLabel()
-                    ->columnSpan(2)
-                    ->searchable(),
+                    ->columnSpan(2),
 
                 TimePicker::make('from_time')
                     ->label('From Time')

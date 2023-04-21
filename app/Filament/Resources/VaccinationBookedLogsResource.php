@@ -6,6 +6,8 @@ use App\Filament\Resources\VaccinationBookedLogsResource\Pages;
 use App\Filament\Resources\VaccinationBookedLogsResource\RelationManagers;
 use App\Models\AvailableTimings;
 use App\Models\VaccinationBookedLogs;
+use App\Models\VaccinationCentre;
+use App\Models\Slots;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -15,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\DatePicker;
 
 class VaccinationBookedLogsResource extends Resource
 {
@@ -43,28 +46,90 @@ class VaccinationBookedLogsResource extends Resource
                 ->relationship('vaccination_centre', 'name', fn (Builder $query) => $query->where('status', '=', 1))
                 ->required()
                 ->inlineLabel()
+                ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                    $vendor = VaccinationCentre::find($state);
+
+                    if ($vendor) {
+                        $aircraftId = (int) $get('available_timings_id');
+
+                        if ($aircraftId && $aircraft = AvailableTimings::find($aircraftId)) {
+                            if ($aircraft->vendor_id !== $vendor->id) {
+                                // aircraft doesn't belong to vendor, so unselect it
+                                $set('available_timings_id', null);
+                            }
+                        }
+                    }
+                })
+                ->reactive()
                 ->columnSpan(2),
 
             Select::make('available_timings_id')
                 ->label('Available Timing')
-                ->options(VaccinationBookedLogs::available_timings())
-                ->required()
+                ->options(function (callable $get, callable $set) {
+                    $vendor = VaccinationCentre::find($get('vaccination_centre_id'));
+                    $available_timing = AvailableTimings::where('vaccination_centre_id', '=', $get('vaccination_centre_id'))->get();
+                    $available_timing_options = [];
+                    foreach ($available_timing as $a_time) {
+                        $data =$a_time->from_time.' | '.$a_time->to_time;
+                        $available_timing_options[$a_time->id] = strtoupper($data);
+
+                    }
+
+                    // no vendor selected, so get all aircraft
+                    return $available_timing_options;
+                })
+
                 ->inlineLabel()
                 ->columnSpan(2),
 
+            Select::make('date_alloted')
+                ->label('Available Date')
+                ->required()
+                ->inlineLabel()
+                ->columnSpan(2)
+                ->options(function (callable $get, callable $set) {
+                    $vendor = VaccinationCentre::find($get('vaccination_centre_id'));
+                    $available_timing = Slots::where('vaccination_centre_id', '=', $get('vaccination_centre_id'))->get();
+                    $available_timing_options = [];
+                    foreach ($available_timing as $a_time) {
+                        $data =$a_time->date_alloted;
+                        $available_timing_options[$a_time->id] = strtoupper($data);
+                    }
+
+                    // no vendor selected, so get all aircraft
+                    return $available_timing_options;
+                })
+
+                ->reactive()
+                ->inlineLabel(),
             Select::make('slot_id')
                 ->label('Slot Available')
-                ->relationship('slot', 'count', fn (Builder $query) => $query->where('status', '=', 1))
-                ->required()
+                ->options(function (callable $get, callable $set) {
+                    $vendor = VaccinationCentre::find($get('vaccination_centre_id'));
+                    $available_timing = Slots::where('id', '=', $get('date_alloted'))->get();
+                    $available_timing_options = [];
+                    foreach ($available_timing as $a_time) {
+                        $data =$a_time->count;
+                        if ($data <= 0)
+                        {
+                            continue;
+                        }
+                        $available_timing_options[$a_time->id] = strtoupper($data);
+                    }
+                    if (count($available_timing_options) === 0)
+                    {
+                        $available_timing_options =["No Slots Available"];
+                    }
+                    // no vendor selected, so get all aircraft
+                    return $available_timing_options;
+                })
+                ->reactive()
                 ->inlineLabel()
                 ->columnSpan(2),
 
-            Select::make('slot.date_alloted')
-                ->label('Date Alloted')
-                ->searchable()
-                ->disabled()
-                ->inlineLabel()
-                ->columnSpan(2),
+
+
+
 
             ]);
     }
@@ -74,7 +139,17 @@ class VaccinationBookedLogsResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('user.name')
-                ->label('Vaccination Centre')
+                ->label('User Name')
+                ->toggleable()
+                ->searchable(),
+
+
+                TextColumn::make('available_timings.from_time')
+                ->label('From Time')
+                ->toggleable()
+                ->searchable(),
+                TextColumn::make('available_timings.to_time')
+                ->label('To Time')
                 ->toggleable()
                 ->searchable(),
 

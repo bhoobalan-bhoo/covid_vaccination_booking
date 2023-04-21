@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use DB;
+use Filament\Notifications\Notification;
+
 class VaccinationBookedLogs extends Model
 {
     use HasFactory;
@@ -19,6 +21,20 @@ class VaccinationBookedLogs extends Model
             if (! $model->isDirty('updated_by')) {
                 $model->updated_by = auth()->user()->email;
             }
+            $check = DB::table('slots')
+                            ->select('count')
+                            ->where('id', [$model->slot_id])
+                            ->pluck('count')
+                            ->first();
+            if ($check <= 0){
+                Notification::make()
+                    ->title('No Slots Available')
+                    ->danger()
+                    ->send();
+                    throw new \Exception('No Slots Available');
+            }
+
+            DB::statement("update slots set count = count -1 where id = ?",[$model->slot_id]);
         });
         // updating updated_by when model is updated
         static::updating(function ($model) {
@@ -34,24 +50,19 @@ class VaccinationBookedLogs extends Model
         'available_timings_id',
         'slot_id',
         'status',
+
+
     ];
 
     public function vaccination_centre(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(VaccinationCentre::class);
     }
-    public static function available_timings():  array
+
+    public function available_timings(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        $available_timing = AvailableTimings::where('status', '=', 1)->get();
-        $available_timing_options = [];
-        foreach ($available_timing as $a_time) {
-            $data =$a_time->from_time.' | '.$a_time->to_time;
-            $available_timing_options[$a_time->id] = strtoupper($data);
 
-        }
-        asort($available_timing_options);
-
-        return $available_timing_options;
+        return $this->belongsTo(AvailableTimings::class);
 
     }
     public function slot(): \Illuminate\Database\Eloquent\Relations\BelongsTo
