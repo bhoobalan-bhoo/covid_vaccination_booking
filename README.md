@@ -36,7 +36,7 @@ composer install
 php artisan migrate
 php artisan key:generate
 
-# Create Super Admin user with this email: bhoobalan.cs20@bitsathy.ac.in
+# Create Super Admin user with this email
 php artisan make:filament-user
 
 php artisan db:seed
